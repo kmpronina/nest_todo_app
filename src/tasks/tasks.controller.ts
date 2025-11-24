@@ -23,6 +23,8 @@ import { CompleteManyDto } from './dto/complete-many.dto';
 import { ApiKeyGuard } from '../common/guards/api-key.guard';
 import { CurrentUser } from '../common/current-user.decorator';
 import { TaskOwnerOrAdminGuard } from 'src/common/guards/task-owner-or-admin.guard';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+
 @Controller('tasks')
 export class TasksController {
     constructor(private readonly tasks: TasksService) {}
@@ -53,6 +55,7 @@ export class TasksController {
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard)
     @HttpCode(201)
     create(@Body() dto: CreateTaskDto) {
         return this.tasks.create(dto);
