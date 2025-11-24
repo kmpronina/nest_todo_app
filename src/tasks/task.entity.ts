@@ -28,8 +28,10 @@ export class Task {
   createdAt: Date;
 
   @UpdateDateColumn()
-  updateAt: Date;
+  updatedAt: Date;
 
   @DeleteDateColumn({ nullable: true })
   deletedAt?: Date | null;
 }
+
+// 01648282-e123-4828-9226-0abef1225ede

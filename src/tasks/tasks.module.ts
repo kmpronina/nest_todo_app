@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TasksService } from './tasks.service';
-import { TasksController } from './tasks.controller';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CacheModule, CacheInterceptor } from '@nestjs/cache-manager';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { TasksController } from './tasks.controller';
+import { TasksService } from './tasks.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 
@@ -14,6 +14,7 @@ import { Task } from './task.entity';
     }),
     TypeOrmModule.forFeature([Task]),
   ],
+  controllers: [TasksController],
   providers: [
     TasksService,
     {
@@ -21,7 +22,6 @@ import { Task } from './task.entity';
       useClass: CacheInterceptor,
     },
   ],
-  controllers: [TasksController],
   exports: [TasksService],
 })
 export class TasksModule {}

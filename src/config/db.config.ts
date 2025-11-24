@@ -10,7 +10,7 @@ export default registerAs('db', () => ({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
 
-  //url: process.env.DB_URL
+  // url: process.env.DB_URL
 
   synchronize: process.env.NODE_ENV === 'development',
 }));

@@ -1,15 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { AUTH_OPTIONS, type AuthModuleOptions } from './auth.module';
+import { AUTH_OPTIONS, AuthModuleOptions } from './auth.constants';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    @Inject(AUTH_OPTIONS) private readonly options: AuthModuleOptions,
-  ) {}
+  constructor(@Inject(AUTH_OPTIONS) private readonly opts: AuthModuleOptions) {}
 
   issueToken(userId: string): string {
-    const prefix = this.options.tokenPrefix ?? 'Bearer';
-    const payload = Buffer.from(`${userId}:${this.options.secret}`).toString(
+    const prefix = this.opts.tokenPrefix ?? 'Bearer';
+    const payload = Buffer.from(`${userId}:${this.opts.secret}`).toString(
       'base64',
     );
 
@@ -17,14 +15,14 @@ export class AuthService {
   }
 
   verifyToken(token: string): string {
-    const [prefix, encoded] = token.split(' ');
-
-    const decoded = Buffer.from(encoded, 'base64').toString('utf-8');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_prefix, encoded] = token.split(' ');
+    const decoded = Buffer.from(encoded, 'base64').toString('utf8');
     //userid:secret
     const [userId, secret] = decoded.split(':');
 
-    if (secret !== this.options.secret) {
-      throw new Error('Invalid token');
+    if (secret !== this.opts.secret) {
+      throw new Error('invalid token');
     }
 
     return userId;
