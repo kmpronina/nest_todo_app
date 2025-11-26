@@ -30,6 +30,7 @@ import { TaskStatus } from 'src/common/task-status.enum';
 import { LoggerInterceptor } from 'src/common/interceptors/logger.interceptor';
 import { ResponseTransformInterceptor } from 'src/common/interceptors/response-transform.interceptor';
 import { TaskDeadlinePipe } from 'src/common/pipes/task-deadline.pipe';
+import { DiffTaskDataInterceptor } from 'src/common/interceptors/diff-task-data.interceptor';
 
 @Controller('tasks')
 @UseInterceptors(LoggerInterceptor, ResponseTransformInterceptor)
@@ -69,6 +70,7 @@ export class TasksController {
     @UseGuards(JwtAuthGuard)
     @HttpCode(201)
     @UsePipes(NormalizeTaskPipe, TaskDeadlinePipe)
+    @UseInterceptors(DiffTaskDataInterceptor)
     create(@Body() dto: CreateTaskDto) {
         return this.tasks.create(dto);
     }
@@ -81,17 +83,20 @@ export class TasksController {
     }
 
     @Patch(':id/complete')
+    @UseInterceptors(DiffTaskDataInterceptor)
     complete(@Param('id', new ParseUUIDPipe()) id: string) {
         return this.tasks.complete(id);
     }
 
     @Patch('complete')
+    @UseInterceptors(DiffTaskDataInterceptor)
     completeMany(@Body() dto: CompleteManyDto) {
         return this.tasks.completeMany(dto.ids);
     }
 
     @Patch(':id')
     @UseGuards(TaskOwnerOrAdminGuard)
+    @UseInterceptors(DiffTaskDataInterceptor)
     update(@Param('id', new ParseUUIDPipe()) id: string, @Body() dto: UpdateTaskDto) {
         return this.tasks.update(id, dto);
     }

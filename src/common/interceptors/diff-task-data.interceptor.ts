@@ -4,8 +4,6 @@ import { TasksService } from 'src/tasks/tasks.service';
 
 @Injectable()
 export class DiffTaskDataInterceptor implements NestInterceptor {
-    constructor(private readonly tasksService: TasksService) {}
-
     intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> {
         const ctx = context.switchToHttp();
         const req = ctx.getRequest<Request>();
