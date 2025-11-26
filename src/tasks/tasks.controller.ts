@@ -12,7 +12,6 @@ import {
     Query,
     ParseIntPipe,
     DefaultValuePipe,
-    Req,
     UseGuards,
     UsePipes
 } from '@nestjs/common';
@@ -30,6 +29,7 @@ import { TaskStatusValidationPipe } from 'src/common/pipes/task-status-validatio
 import { TaskStatus } from 'src/common/task-status.enum';
 import { LoggerInterceptor } from 'src/common/interceptors/logger.interceptor';
 import { ResponseTransformInterceptor } from 'src/common/interceptors/response-transform.interceptor';
+import { TaskDeadlinePipe } from 'src/common/pipes/task-deadline.pipe';
 
 @Controller('tasks')
 @UseInterceptors(LoggerInterceptor, ResponseTransformInterceptor)
@@ -68,7 +68,7 @@ export class TasksController {
     @Post()
     @UseGuards(JwtAuthGuard)
     @HttpCode(201)
-    @UsePipes(NormalizeTaskPipe)
+    @UsePipes(NormalizeTaskPipe, TaskDeadlinePipe)
     create(@Body() dto: CreateTaskDto) {
         return this.tasks.create(dto);
     }

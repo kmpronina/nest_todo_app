@@ -1,37 +1,40 @@
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  Index,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { TaskPriority } from 'src/common/task-priority.enum';
+import { TaskStatus } from 'src/common/task-status.enum';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('tasks')
 @Index(['ownerId', 'completed'])
 export class Task {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-  @Column({ length: 255 })
-  title: string;
+    @Column({ length: 255 })
+    title: string;
 
-  @Column({ default: false })
-  completed: boolean;
+    @Column({ default: false })
+    completed: boolean;
 
-  @Column()
-  @Index()
-  ownerId: string;
+    @Column()
+    @Index()
+    ownerId: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+    @Column({ nullable: true })
+    status?: TaskStatus;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+    @Column({ nullable: true })
+    priority?: TaskPriority;
 
-  @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | null;
+    @Column()
+    deadline: Date;
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    @DeleteDateColumn({ nullable: true })
+    deletedAt?: Date | null;
 }
 
 // 01648282-e123-4828-9226-0abef1225ede
