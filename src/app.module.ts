@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TasksModule } from './tasks/tasks.module';
-import { LoggerMiddleware } from './common/logger.middleware';
+// import { LoggerMiddleware } from './common/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import dbConfig from './config/db.config';
@@ -39,7 +39,7 @@ import { UserContextMiddleware } from './common/user-context.middleware';
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(LoggerMiddleware).forRoutes('*');
+        // consumer.apply(LoggerMiddleware).forRoutes('*');
         consumer.apply(UserContextMiddleware).forRoutes('tasks');
     }
 }
