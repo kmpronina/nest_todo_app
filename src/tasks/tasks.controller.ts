@@ -21,7 +21,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { CompleteManyDto } from './dto/complete-many.dto';
 import { ApiKeyGuard } from '../common/guards/api-key.guard';
-import { CurrentUser } from '../common/current-user.decorator';
+import { CurrentUser } from 'src/common/current-user.decorator';
 import { TaskOwnerOrAdminGuard } from 'src/common/guards/task-owner-or-admin.guard';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { NormalizeTaskPipe } from 'src/common/pipes/normalize-task.pipe';

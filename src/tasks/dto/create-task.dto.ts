@@ -17,6 +17,7 @@ export class CreateTaskDto {
     @IsBoolean()
     completed?: boolean = false;
 
+    @IsOptional()
     @IsString()
     status?: TaskStatus;
 
