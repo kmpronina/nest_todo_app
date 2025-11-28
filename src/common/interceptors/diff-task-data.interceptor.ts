@@ -1,4 +1,5 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { Request } from 'express';
 import { Observable, tap } from 'rxjs';
 import { TasksService } from 'src/tasks/tasks.service';
 
@@ -12,19 +13,18 @@ export class DiffTaskDataInterceptor implements NestInterceptor {
 
         const { method, body } = req;
 
-        // const task = await this.tasksService.findOne(req.body.values.id);
+        const task = await this.tasksService.findOne(req.body.values.id);
 
         return next.handle().pipe(
             tap(() => {
                 if (method === 'POST' || method === 'PATCH') {
-                    // const diffs = {};
-                    // for (const key in body.values) {
-                    //     if (body.values[key] !== task[key]) {
-                    //         diffs[key] = { old: task[key], new: body.values[key] };
-                    //     }
-                    // }
-                    // console.log(`Task ${task.id} data changes:`, diffs);
-                    console.log(`Task data has been changed: `, body.values);
+                    const diffs = {};
+                    for (const key in body.values) {
+                        if (body.values[key] !== task[key]) {
+                            diffs[key] = { old: task[key], new: body.values[key] };
+                        }
+                    }
+                    console.log(`Task ${task.id} data changes:`, diffs);
                 }
             })
         );
