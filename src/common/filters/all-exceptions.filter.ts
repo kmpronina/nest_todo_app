@@ -6,14 +6,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     catch(exception: unknown, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
-
         const response = ctx.getResponse();
         const request = ctx.getRequest();
 
         const isHttpException = exception instanceof HttpException;
         const status = isHttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
-        const exceptionsResponse = isHttpException ? exception.getResponse() : null;
+        const exceptionResponse = isHttpException ? exception.getResponse() : null;
 
         this.logger.error(`Error on ${request.method} ${request.url}`, (exception as any)?.stack || String(exception));
 
@@ -23,32 +22,35 @@ export class AllExceptionsFilter implements ExceptionFilter {
             path: request.url,
             method: request.method,
             statusCode: status,
-            message: this.normalizeMessage(exceptionsResponse),
-            errorCode: this.extractErrorCode(exceptionsResponse)
+            message: this.normalizeMsg(exceptionResponse),
+            error: this.extractErrorCode(exceptionResponse)
         };
+
+        response.status(status).json(errorResponse);
     }
 
-    private extractErrorCode(exceptionsResponse: unknown) {
-        if (typeof exceptionsResponse === 'object' && 'errorCode' in exceptionsResponse) {
-            return String((exceptionsResponse as any).error);
-        }
-        return null;
-    }
-
-    private normalizeMessage(exceptionsResponse: unknown) {
-        if (typeof exceptionsResponse === 'string') {
-            return [exceptionsResponse];
+    private normalizeMsg(exceptionResponse: unknown) {
+        if (typeof exceptionResponse === 'string') {
+            return [exceptionResponse];
         }
 
-        if (typeof exceptionsResponse === 'object' && 'message' in exceptionsResponse) {
-            const message = (exceptionsResponse as any).message;
-            if (Array.isArray(message)) {
-                return message;
-            } else if (typeof message === 'string') {
-                return [message];
+        if (exceptionResponse && typeof exceptionResponse === 'object' && 'message' in exceptionResponse) {
+            const msg = exceptionResponse.message;
+            if (Array.isArray(msg)) {
+                return msg;
+            }
+            if (typeof msg === 'string') {
+                return [msg];
             }
         }
 
         return ['Internal server error'];
+    }
+
+    private extractErrorCode(exceptionResponse: unknown) {
+        if (exceptionResponse && typeof exceptionResponse === 'object' && 'error' in exceptionResponse) {
+            return String(exceptionResponse.error);
+        }
+        return null;
     }
 }

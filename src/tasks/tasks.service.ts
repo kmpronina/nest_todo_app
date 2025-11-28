@@ -1,4 +1,4 @@
-import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -14,13 +14,6 @@ export class TasksService {
     ) {}
 
     async create(dto: CreateTaskDto): Promise<Task> {
-        // const tasks = await this.findAll();
-        // const existingTitles = tasks.map((task) => task.title);
-
-        // if (existingTitles.includes(dto.title)) {
-        //     throw new ConflictException(`Task with title "${dto.title}" already exists`);
-        // }
-
         const task = this.taskRepo.create({
             title: dto.title,
             completed: dto.completed ?? false,
@@ -49,6 +42,16 @@ export class TasksService {
         if (!task) {
             throw new NotFoundException(`Task ${id} - not found`);
         }
+
+        return task;
+    }
+
+    async findByTitle(title: string): Promise<Task | null> {
+        const task = await this.taskRepo.findOne({
+            where: { title }
+        });
+
+        if (!task.id) return null;
 
         return task;
     }

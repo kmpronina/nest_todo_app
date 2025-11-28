@@ -5,6 +5,7 @@ import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from './task.entity';
+import { IsTitleUniqueConstraint } from 'src/common/validators/is-title-unique.validator';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { Task } from './task.entity';
   controllers: [TasksController],
   providers: [
     TasksService,
+    IsTitleUniqueConstraint,
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
