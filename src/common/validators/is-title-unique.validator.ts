@@ -14,7 +14,7 @@ export class IsTitleUniqueConstraint implements ValidatorConstraintInterface {
 
         const task = await this.tasksService.findByTitle(title);
 
-        return !task;
+        return !!task;
     }
 
     defaultMessage(args: ValidationArguments) {
